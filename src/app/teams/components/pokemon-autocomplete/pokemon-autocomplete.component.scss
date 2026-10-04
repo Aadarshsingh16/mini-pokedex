@@ -1,4 +1,10 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
 .pokemon-autocomplete {
+  box-sizing: border-box;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -6,6 +12,7 @@
   width: 100%;
 
   &__chips-bar {
+    box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -18,6 +25,7 @@
   }
 
   &__chip {
+    box-sizing: border-box;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -74,11 +82,13 @@
   }
 
   &__input-container {
+    box-sizing: border-box;
     position: relative;
     width: 100%;
   }
 
   &__input-wrapper {
+    box-sizing: border-box;
     position: relative;
     display: flex;
     align-items: center;
@@ -95,6 +105,7 @@
   }
 
   &__input {
+    box-sizing: border-box;
     width: 100%;
     height: 42px;
     padding: 0 14px 0 38px;
@@ -114,6 +125,7 @@
   }
 
   &__dropdown {
+    box-sizing: border-box;
     position: absolute;
     top: calc(100% + 4px);
     left: 0;
@@ -128,11 +140,13 @@
   }
 
   &__options-list {
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
   }
 
   &__option {
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -171,6 +185,7 @@
   }
 
   &__full-notice {
+    box-sizing: border-box;
     padding: 8px 12px;
     font-size: 0.8125rem;
     color: #059669;
