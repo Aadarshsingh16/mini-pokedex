@@ -1,0 +1,80 @@
+<div class="teams-page">
+  <div class="teams-page__header">
+    <div class="teams-page__title-group">
+      <h1 class="teams-page__title">Pokémon Teams</h1>
+      <p class="teams-page__subtitle">
+        Build, manage, and inspect squad synergies for Trainer Ash Ketchum.
+      </p>
+    </div>
+  </div>
+
+  <!-- Selected Team Analysis Panel -->
+  @if (selectedTeam(); as team) {
+    <div class="teams-page__analysis-panel">
+      <div class="teams-page__analysis-header">
+        <div>
+          <span class="teams-page__analysis-badge">Active Selection</span>
+          <h2 class="teams-page__analysis-title">{{ team.name }} Synergy & Stats</h2>
+        </div>
+        <button
+          type="button"
+          class="teams-page__analysis-close-btn"
+          (click)="onSelectTeam(team.id)"
+          aria-label="Deselect team"
+        >
+          Deselect
+        </button>
+      </div>
+
+      <div class="teams-page__analysis-grid">
+        <!-- Type Synergies -->
+        <div class="teams-page__analysis-card">
+          <span class="teams-page__analysis-label">Elemental Type Coverage</span>
+          <div class="teams-page__type-badges">
+            @for (item of teamTypeDistribution(); track item.type) {
+              <div class="teams-page__type-item">
+                <app-badge [label]="item.type" size="small" />
+                <span class="teams-page__type-multiplier">&times;{{ item.count }}</span>
+              </div>
+            } @empty {
+              <span class="teams-page__empty-hint">Loading member details...</span>
+            }
+          </div>
+        </div>
+
+        <!-- Total Stats -->
+        <div class="teams-page__analysis-card">
+          <span class="teams-page__analysis-label">Team Total Base Stats</span>
+          <span class="teams-page__analysis-stat">{{ teamTotalStats() }}</span>
+        </div>
+
+        <!-- Average Stats -->
+        <div class="teams-page__analysis-card">
+          <span class="teams-page__analysis-label">Average Member Stat</span>
+          <span class="teams-page__analysis-stat">{{ teamAverageStats() }}</span>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Main Layout Grid: Form + Team List -->
+  <div class="teams-page__layout">
+    <section class="teams-page__form-section" aria-label="Build Team">
+      <app-team-builder-form />
+    </section>
+
+    <section class="teams-page__list-section" aria-label="Team List">
+      <app-team-list
+        [teams]="allTeams()"
+        [status]="teamAsyncState().status"
+        [errorMessage]="teamAsyncState().error"
+        [selectedTeamId]="selectedTeamId()"
+        [pendingCreationIds]="pendingCreationIds()"
+        [pendingDeletionIds]="pendingDeletionIds()"
+        (selectTeam)="onSelectTeam($event)"
+        (deleteTeam)="onDeleteTeam($event)"
+        (retry)="onRetry()"
+      />
+    </section>
+  </div>
+</div>

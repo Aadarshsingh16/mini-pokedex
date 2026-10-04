@@ -1,0 +1,28 @@
+<div class="team-list">
+  <div class="team-list__header">
+    <h2 class="team-list__title">Saved Teams</h2>
+    <span class="team-list__count">{{ teams().length }} {{ teams().length === 1 ? 'team' : 'teams' }}</span>
+  </div>
+
+  <app-ui-state
+    [status]="status()"
+    [errorMessage]="errorMessage()"
+    emptyMessage="No teams created yet. Build your first team above!"
+    skeletonHeight="220px"
+    [skeletonRows]="2"
+    (retry)="onRetry()"
+  >
+    <div class="team-list__grid">
+      @for (team of teams(); track team.id) {
+        <app-team-card
+          [team]="team"
+          [isSelected]="team.id === selectedTeamId()"
+          [isPendingCreation]="pendingCreationIds().includes(team.id)"
+          [isPendingDeletion]="pendingDeletionIds().includes(team.id)"
+          (select)="onSelectTeam($event)"
+          (delete)="onDeleteTeam($event)"
+        />
+      }
+    </div>
+  </app-ui-state>
+</div>

@@ -1,0 +1,52 @@
+<div
+  class="team-card"
+  [class.team-card--selected]="isSelected()"
+  [class.team-card--pending-create]="isPendingCreation()"
+  [class.team-card--pending-delete]="isPendingDeletion()"
+  (click)="onSelect()"
+  tabindex="0"
+  (keydown.enter)="onSelect()"
+  role="button"
+  [attr.aria-selected]="isSelected()"
+>
+  <div class="team-card__header">
+    <div class="team-card__title-group">
+      <h3 class="team-card__name">{{ team().name }}</h3>
+      <span class="team-card__date">{{ formattedDate() }}</span>
+    </div>
+
+    <div class="team-card__actions">
+      @if (isPendingCreation()) {
+        <span class="team-card__badge team-card__badge--create">Saving...</span>
+      } @else if (isPendingDeletion()) {
+        <span class="team-card__badge team-card__badge--delete">Deleting...</span>
+      }
+
+      <button
+        type="button"
+        class="team-card__delete-btn"
+        [disabled]="isPendingCreation() || isPendingDeletion()"
+        (click)="onDelete($event)"
+        [attr.aria-label]="'Delete ' + team().name"
+      >
+        <app-icon name="ic_delete" [size]="16" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Members Sprites Row -->
+  <div class="team-card__members">
+    @for (member of members(); track member.id) {
+      <div class="team-card__member-slot">
+        <img
+          [src]="member.spriteUrl"
+          [alt]="member.name"
+          class="team-card__sprite"
+          width="44"
+          height="44"
+          loading="lazy"
+        />
+      </div>
+    }
+  </div>
+</div>
