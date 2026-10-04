@@ -42,3 +42,11 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Local assistant & planning artifacts
+.agents/
+skills-lock.json
+AGENTS.md
+SPEC.md
+tasks/
+graphify-out/
