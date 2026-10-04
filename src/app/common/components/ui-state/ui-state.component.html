@@ -1,0 +1,86 @@
+@switch (status()) {
+  @case ('loading') {
+    <div
+      class="ui-state-skeleton"
+      [style.min-height]="skeletonHeight()"
+      role="status"
+      aria-label="Loading content"
+    >
+      @for (row of skeletonRowArray; track row) {
+        <div class="ui-state-skeleton__row"></div>
+      }
+    </div>
+  }
+
+  @case ('empty') {
+    <div class="ui-state-empty" role="status">
+      <div class="ui-state-empty__icon-wrapper">
+        <svg
+          class="ui-state-empty__icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="8" y1="12" x2="16" y2="12"></line>
+        </svg>
+      </div>
+      <p class="ui-state-empty__message">{{ emptyMessage() }}</p>
+    </div>
+  }
+
+  @case ('error') {
+    <div class="ui-state-error" role="alert">
+      <div class="ui-state-error__icon-wrapper">
+        <svg
+          class="ui-state-error__icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <div class="ui-state-error__content">
+        <p class="ui-state-error__message">{{ errorMessage() }}</p>
+        <button
+          type="button"
+          class="ui-state-error__retry-btn"
+          (click)="onRetry()"
+        >
+          <svg
+            class="ui-state-error__retry-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+          </svg>
+          Retry
+        </button>
+      </div>
+    </div>
+  }
+
+  @case ('success') {
+    <ng-content />
+  }
+
+  @default {
+    <!-- Idle state -->
+  }
+}

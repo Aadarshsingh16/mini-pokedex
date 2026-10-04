@@ -1,0 +1,18 @@
+<div class="toast-container" aria-live="polite" aria-atomic="true">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div
+      class="toast-item toast-item--{{ toast.type }}"
+      role="alert"
+    >
+      <span class="toast-item__message">{{ toast.message }}</span>
+      <button
+        type="button"
+        class="toast-item__close"
+        aria-label="Close notification"
+        (click)="toastService.dismiss(toast.id)"
+      >
+        &times;
+      </button>
+    </div>
+  }
+</div>
