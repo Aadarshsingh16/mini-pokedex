@@ -1,0 +1,93 @@
+<div class="pokemon-autocomplete">
+  <!-- Selected Chips List -->
+  <div class="pokemon-autocomplete__chips-bar">
+    @for (pokemon of selectedPokemonList(); track pokemon.id) {
+      <div class="pokemon-autocomplete__chip">
+        <img
+          [src]="pokemon.spriteUrl"
+          [alt]="pokemon.name"
+          class="pokemon-autocomplete__chip-sprite"
+          width="24"
+          height="24"
+        />
+        <span class="pokemon-autocomplete__chip-name">{{ pokemon.name | titlecase }}</span>
+        <button
+          type="button"
+          class="pokemon-autocomplete__chip-remove"
+          (click)="removePokemon(pokemon.id)"
+          [attr.aria-label]="'Remove ' + pokemon.name"
+        >
+          <app-icon name="ic_close" [size]="12" />
+        </button>
+      </div>
+    }
+
+    <span class="pokemon-autocomplete__counter" [class.pokemon-autocomplete__counter--complete]="selectedIds().length >= 6">
+      {{ selectedIds().length }}/6 members
+    </span>
+  </div>
+
+  <!-- Search Input Container -->
+  @if (selectedIds().length < 6) {
+    <div class="pokemon-autocomplete__input-container">
+      <div class="pokemon-autocomplete__input-wrapper">
+        <span class="pokemon-autocomplete__search-icon" aria-hidden="true">
+          <app-icon name="ic_search" [size]="16" />
+        </span>
+
+        <input
+          type="text"
+          class="pokemon-autocomplete__input"
+          [formControl]="queryControl"
+          placeholder="Search Pokémon to add to team..."
+          aria-label="Search Pokémon to add to team"
+          (focus)="openDropdown()"
+          (blur)="closeDropdownWithDelay()"
+          id="team-pokemon-autocomplete-input"
+        />
+      </div>
+
+      <!-- 4-State Suggestions Dropdown -->
+      @if (isDropdownOpen()) {
+        <div class="pokemon-autocomplete__dropdown" role="listbox">
+          <app-ui-state
+            [status]="dropdownStatus()"
+            [errorMessage]="storeStatus().error"
+            emptyMessage="No Pokémon found matching query."
+            skeletonHeight="140px"
+            [skeletonRows]="3"
+            (retry)="onRetryCatalog()"
+          >
+            <div class="pokemon-autocomplete__options-list">
+              @for (pokemon of suggestions(); track pokemon.id) {
+                <div
+                  class="pokemon-autocomplete__option"
+                  (mousedown)="selectPokemon(pokemon)"
+                  role="option"
+                  tabindex="0"
+                >
+                  <img
+                    [src]="pokemon.spriteUrl"
+                    [alt]="pokemon.name"
+                    class="pokemon-autocomplete__option-sprite"
+                    width="32"
+                    height="32"
+                    loading="lazy"
+                  />
+                  <div class="pokemon-autocomplete__option-info">
+                    <span class="pokemon-autocomplete__option-name">{{ pokemon.name | titlecase }}</span>
+                    <span class="pokemon-autocomplete__option-id">#{{ pokemon.id }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+          </app-ui-state>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="pokemon-autocomplete__full-notice">
+      Team is full (6 of 6 Pokémon selected). Remove a member to choose another.
+    </div>
+  }
+</div>

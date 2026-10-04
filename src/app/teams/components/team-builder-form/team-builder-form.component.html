@@ -1,0 +1,94 @@
+<div class="team-builder-form">
+  <div class="team-builder-form__header">
+    <h2 class="team-builder-form__title">Create a Team</h2>
+    <p class="team-builder-form__subtitle">
+      Form a battle-ready squad of 1 to 6 Pokémon (Trainer: Ash Ketchum).
+    </p>
+  </div>
+
+  <form
+    class="team-builder-form__form"
+    [formGroup]="teamForm"
+    (ngSubmit)="onSubmit()"
+    novalidate
+  >
+    <!-- Team Name Field -->
+    <div class="team-builder-form__group">
+      <label for="team-name-input" class="team-builder-form__label">
+        Team Name <span class="team-builder-form__required">*</span>
+      </label>
+
+      <input
+        type="text"
+        id="team-name-input"
+        class="team-builder-form__input"
+        [class.team-builder-form__input--error]="
+          teamForm.controls.name.invalid &&
+          (teamForm.controls.name.dirty || teamForm.controls.name.touched)
+        "
+        formControlName="name"
+        placeholder="e.g. Thunder Squad"
+        autocomplete="off"
+      />
+
+      <!-- Pending validation indicator -->
+      @if (teamForm.controls.name.pending) {
+        <span class="team-builder-form__hint">Checking name availability...</span>
+      }
+
+      <!-- Name Validation Errors -->
+      @if (
+        teamForm.controls.name.invalid &&
+        (teamForm.controls.name.dirty || teamForm.controls.name.touched)
+      ) {
+        <div class="team-builder-form__error-message" role="alert">
+          @if (teamForm.controls.name.errors?.['required']) {
+            <span>Team name is required.</span>
+          } @else if (teamForm.controls.name.errors?.['minlength']) {
+            <span>Team name must be at least 3 characters.</span>
+          } @else if (teamForm.controls.name.errors?.['maxlength']) {
+            <span>Team name cannot exceed 30 characters.</span>
+          } @else if (teamForm.controls.name.errors?.['teamNameTaken']) {
+            <span>A team with this name already exists or is pending creation.</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Pokémon Selection Autocomplete -->
+    <div class="team-builder-form__group">
+      <label class="team-builder-form__label">
+        Team Members <span class="team-builder-form__required">*</span>
+      </label>
+
+      <app-pokemon-autocomplete
+        [selectedIds]="teamForm.controls.pokemon_ids.value"
+        (selectionChange)="onPokemonSelectionChange($event)"
+      />
+
+      <!-- Members Validation Errors -->
+      @if (
+        teamForm.controls.pokemon_ids.invalid &&
+        (teamForm.controls.pokemon_ids.dirty || teamForm.controls.pokemon_ids.touched)
+      ) {
+        <div class="team-builder-form__error-message" role="alert">
+          @if (teamForm.controls.pokemon_ids.errors?.['minPokemon']) {
+            <span>Please select at least 1 Pokémon to build a team.</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Submit Action -->
+    <div class="team-builder-form__actions">
+      <button
+        type="submit"
+        class="team-builder-form__submit-btn"
+        [disabled]="teamForm.invalid || teamForm.pending"
+        id="create-team-submit-btn"
+      >
+        Save Team
+      </button>
+    </div>
+  </form>
+</div>
