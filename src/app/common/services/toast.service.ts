@@ -56,6 +56,26 @@ export class ToastService {
   }
 
   /**
+   * Convenience method to trigger an info toast.
+   *
+   * @param message Info text to display
+   * @param durationMs Milliseconds before dismissal
+   */
+  public info(message: string, durationMs = 4000): void {
+    this.show(message, 'info', durationMs);
+  }
+
+  /**
+   * Convenience method to trigger a warning toast.
+   *
+   * @param message Warning text to display
+   * @param durationMs Milliseconds before dismissal
+   */
+  public warn(message: string, durationMs = 4000): void {
+    this.show(message, 'info', durationMs);
+  }
+
+  /**
    * Dismisses a specific toast notification by its unique ID.
    *
    * @param id Toast ID to dismiss
