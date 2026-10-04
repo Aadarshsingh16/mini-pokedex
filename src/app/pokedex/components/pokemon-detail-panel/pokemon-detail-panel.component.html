@@ -1,0 +1,125 @@
+<!-- Backdrop Overlay -->
+<div
+  class="pokemon-detail-panel__backdrop"
+  [class.pokemon-detail-panel__backdrop--open]="isOpen()"
+  (click)="onClose()"
+  aria-hidden="true"
+></div>
+
+<!-- Drawer Container -->
+<aside
+  class="pokemon-detail-panel__drawer"
+  [class.pokemon-detail-panel__drawer--open]="isOpen()"
+  role="dialog"
+  [attr.aria-hidden]="!isOpen()"
+  aria-label="Pokémon Details"
+>
+  @if (pokemon(); as p) {
+    <header class="pokemon-detail-panel__header">
+      <div class="pokemon-detail-panel__title-group">
+        <span class="pokemon-detail-panel__number">#{{ p.id }}</span>
+        <h2 class="pokemon-detail-panel__name">{{ p.name | titlecase }}</h2>
+      </div>
+
+      <button
+        type="button"
+        class="pokemon-detail-panel__close-btn"
+        (click)="onClose()"
+        aria-label="Close details"
+      >
+        <app-icon name="ic_close" [size]="20" />
+      </button>
+    </header>
+
+    <div class="pokemon-detail-panel__content">
+      <!-- Media & Types -->
+      <div class="pokemon-detail-panel__hero">
+        <div class="pokemon-detail-panel__artwork-wrapper">
+          <img
+            [src]="p.spriteUrl"
+            [alt]="p.name"
+            class="pokemon-detail-panel__artwork"
+            width="160"
+            height="160"
+          />
+        </div>
+
+        <div class="pokemon-detail-panel__types">
+          @for (t of p.types; track t) {
+            <app-badge [label]="t" size="medium" />
+          }
+        </div>
+      </div>
+
+      <!-- Physical Metrics -->
+      <div class="pokemon-detail-panel__metrics">
+        <div class="pokemon-detail-panel__metric-card">
+          <span class="pokemon-detail-panel__metric-label">Height</span>
+          <span class="pokemon-detail-panel__metric-value">{{ p.height / 10 }} m</span>
+        </div>
+
+        <div class="pokemon-detail-panel__metric-card">
+          <span class="pokemon-detail-panel__metric-label">Weight</span>
+          <span class="pokemon-detail-panel__metric-value">{{ p.weight / 10 }} kg</span>
+        </div>
+
+        <div class="pokemon-detail-panel__metric-card">
+          <span class="pokemon-detail-panel__metric-label">Base Total</span>
+          <span class="pokemon-detail-panel__metric-value">{{ p.totalStats }}</span>
+        </div>
+      </div>
+
+      <!-- Radar Chart (Deferred on Viewport) -->
+      <div class="pokemon-detail-panel__section">
+        <h3 class="pokemon-detail-panel__section-title">Base Stats Distribution</h3>
+        @defer (on viewport) {
+          <app-pokemon-radar-chart
+            [stats]="p.stats"
+            [pokemonName]="p.name | titlecase"
+          />
+        } @placeholder (minimum 200ms) {
+          <div class="pokemon-detail-panel__radar-placeholder">
+            <app-ui-state status="loading" skeletonHeight="280px" />
+          </div>
+        } @error {
+          <div class="pokemon-detail-panel__radar-error">
+            <app-ui-state status="error" errorMessage="Failed to load radar chart." />
+          </div>
+        }
+      </div>
+
+      <!-- 4-State Abilities Section -->
+      <div class="pokemon-detail-panel__section">
+        <h3 class="pokemon-detail-panel__section-title">Abilities</h3>
+        <app-ui-state
+          [status]="abilityAsyncStatus()"
+          [errorMessage]="abilityEntry().error"
+          emptyMessage="No abilities recorded for this Pokémon."
+          skeletonHeight="120px"
+          [skeletonRows]="2"
+          (retry)="onRetryAbilities()"
+        >
+          <div class="pokemon-detail-panel__abilities-list">
+            @for (ability of abilityEntry().data ?? []; track ability.name) {
+              <div class="pokemon-detail-panel__ability-card">
+                <div class="pokemon-detail-panel__ability-header">
+                  <span class="pokemon-detail-panel__ability-name">
+                    {{ ability.name | titlecase }}
+                  </span>
+                  @if (ability.isHidden) {
+                    <span class="pokemon-detail-panel__ability-hidden-badge">
+                      Hidden Ability
+                    </span>
+                  }
+                </div>
+                <p class="pokemon-detail-panel__ability-effect">
+                  {{ ability.shortEffect }}
+                </p>
+              </div>
+            }
+          </div>
+        </app-ui-state>
+      </div>
+    </div>
+  }
+</aside>
