@@ -1,0 +1,85 @@
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1280px;
+    height: 64px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #0f172a;
+  }
+
+  &__pokeball {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom, #ef4444 0%, #ef4444 50%, #ffffff 50%, #ffffff 100%);
+    border: 2px solid #1e293b;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      background-color: #ffffff;
+      border: 2px solid #1e293b;
+      border-radius: 50%;
+    }
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__link {
+    padding: 8px 16px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #64748b;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+
+    &:hover {
+      color: #0f172a;
+      background-color: #f1f5f9;
+    }
+
+    &--active {
+      color: #2563eb;
+      background-color: #eff6ff;
+    }
+  }
+}
+
+.app-main {
+  min-height: calc(100vh - 64px);
+  background-color: #f8fafc;
+}

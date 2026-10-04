@@ -1,0 +1,32 @@
+<header class="app-header">
+  <div class="app-header__container">
+    <a routerLink="/pokedex" class="app-header__brand">
+      <div class="app-header__pokeball" aria-hidden="true"></div>
+      <span class="app-header__title">Mini Pokédex</span>
+    </a>
+
+    <nav class="app-header__nav" aria-label="Main Navigation">
+      <a
+        routerLink="/pokedex"
+        routerLinkActive="app-header__link--active"
+        class="app-header__link"
+      >
+        Pokédex
+      </a>
+      <a
+        routerLink="/teams"
+        routerLinkActive="app-header__link--active"
+        class="app-header__link"
+      >
+        Teams
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main class="app-main">
+  <router-outlet />
+</main>
+
+<!-- Global Mutation Toast Notifications -->
+<app-toast-container />

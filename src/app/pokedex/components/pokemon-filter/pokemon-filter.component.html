@@ -1,0 +1,45 @@
+<div class="pokemon-filter">
+  <div class="pokemon-filter__search">
+    <span class="pokemon-filter__search-icon" aria-hidden="true">
+      <app-icon name="ic_search" [size]="18" />
+    </span>
+
+    <input
+      type="text"
+      class="pokemon-filter__input"
+      [formControl]="searchControl"
+      placeholder="Search Pokémon by name or ID..."
+      aria-label="Search Pokémon by name or ID"
+      id="pokemon-search-input"
+    />
+
+    @if (searchControl.value.length > 0) {
+      <button
+        type="button"
+        class="pokemon-filter__clear-btn"
+        (click)="clearSearch()"
+        aria-label="Clear search"
+        id="pokemon-search-clear-btn"
+      >
+        <app-icon name="ic_close" [size]="14" />
+      </button>
+    }
+  </div>
+
+  <div class="pokemon-filter__type">
+    <label for="pokemon-type-filter" class="pokemon-filter__type-label">Type:</label>
+    <div class="pokemon-filter__select-wrapper">
+      <select
+        id="pokemon-type-filter"
+        class="pokemon-filter__select"
+        [formControl]="typeControl"
+        aria-label="Filter Pokémon by type"
+      >
+        <option value="">All Types</option>
+        @for (type of pokemonTypes; track type) {
+          <option [value]="type">{{ type | titlecase }}</option>
+        }
+      </select>
+    </div>
+  </div>
+</div>

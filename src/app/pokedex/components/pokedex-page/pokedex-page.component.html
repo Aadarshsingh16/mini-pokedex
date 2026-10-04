@@ -1,0 +1,38 @@
+<div class="pokedex-page">
+  <div class="pokedex-page__header">
+    <div class="pokedex-page__title-group">
+      <h1 class="pokedex-page__title">Pokédex</h1>
+      <p class="pokedex-page__subtitle">
+        Browse and inspect Pokémon stats, elemental types, and abilities.
+      </p>
+    </div>
+  </div>
+
+  <div class="pokedex-page__content">
+    <!-- Filter Bar (Search + Type Filter) -->
+    <app-pokemon-filter />
+
+    <!-- 4-State Pokémon Data Table -->
+    <app-pokemon-table
+      [pokemonList]="paginatedPokemon()"
+      [status]="asyncState().status"
+      [errorMessage]="asyncState().error"
+      [selectedPokemonId]="selectedPokemonId()"
+      [sort]="sort()"
+      [pagination]="pagination()"
+      [totalCount]="totalFilteredCount()"
+      [batch]="batch()"
+      (sortChange)="onSortChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+      (pageIndexChange)="onPageIndexChange($event)"
+      (pokemonSelect)="onPokemonSelect($event)"
+      (retry)="onRetry()"
+    />
+  </div>
+
+  <!-- Detail Drawer Panel -->
+  <app-pokemon-detail-panel
+    [pokemon]="selectedPokemon()"
+    (close)="onCloseDetail()"
+  />
+</div>

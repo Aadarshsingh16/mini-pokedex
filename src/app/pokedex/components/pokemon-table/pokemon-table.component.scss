@@ -1,0 +1,256 @@
+.pokemon-table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &__batch-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+
+    &--error {
+      background: #fee2e2;
+      border: 1px solid #fca5a5;
+      color: #991b1b;
+    }
+
+    &--loading {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+    }
+  }
+
+  &__batch-banner-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__batch-spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #93c5fd;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  &__batch-retry-btn {
+    padding: 4px 10px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #fff;
+    background: #dc2626;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    &:hover { background: #b91c1c; }
+  }
+
+  &__container {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    overflow: hidden;
+  }
+
+  &__scroll-pane {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.875rem;
+  }
+
+  &__header-row {
+    background: #f8fafc;
+    border-bottom: 2px solid #e2e8f0;
+  }
+
+  &__th {
+    padding: 10px 14px;
+    font-weight: 600;
+    color: #475569;
+    user-select: none;
+    white-space: nowrap;
+
+    &--id, &--name, &--stat {
+      cursor: pointer;
+      &:hover {
+        color: #1e293b;
+        background: #f1f5f9;
+      }
+    }
+
+    &--stat {
+      text-align: right;
+    }
+  }
+
+  &__th-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__sort-indicator {
+    font-size: 0.6875rem;
+    color: #2563eb;
+  }
+
+  &__row {
+    height: 56px;
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+
+    &:hover { background: #f8fafc; }
+
+    &--selected {
+      background: #eff6ff !important;
+      outline: 2px solid #3b82f6;
+      outline-offset: -2px;
+    }
+  }
+
+  &__td {
+    padding: 8px 14px;
+    color: #1e293b;
+    vertical-align: middle;
+    white-space: nowrap;
+
+    &--stat {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    &--total {
+      color: #0f172a;
+    }
+  }
+
+  &__identity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__sprite {
+    display: block;
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+  }
+
+  &__number {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #64748b;
+  }
+
+  &__name-text {
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  &__type-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  &__pagination {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+
+    @media (min-width: 640px) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  &__pagination-info {
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+
+  &__pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__page-size {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__page-size-label {
+    font-size: 0.8125rem;
+    color: #64748b;
+  }
+
+  &__page-size-select {
+    padding: 4px 8px;
+    font-size: 0.8125rem;
+    color: #1e293b;
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  &__page-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__page-current {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #475569;
+  }
+
+  &__nav-btn {
+    padding: 5px 10px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #334155;
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    &:disabled {
+      color: #94a3b8;
+      background: #f8fafc;
+      border-color: #e2e8f0;
+      cursor: not-allowed;
+    }
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

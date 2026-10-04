@@ -1,0 +1,191 @@
+<div class="pokemon-table">
+  <!-- Batch loading error banner (allows table interaction while displaying error) -->
+  @if (batch()?.batchError) {
+    <div class="pokemon-table__batch-banner pokemon-table__batch-banner--error" role="alert">
+      <div class="pokemon-table__batch-banner-text">
+        <strong>Batch Load Error:</strong> Unable to load more Pokémon at record {{ batch()?.offset }}.
+      </div>
+      <button
+        type="button"
+        class="pokemon-table__batch-retry-btn"
+        (click)="onRetryClick()"
+      >
+        Retry Next Batch
+      </button>
+    </div>
+  }
+
+  <!-- Background batch loading indicator -->
+  @if (batch()?.loadingMore) {
+    <div class="pokemon-table__batch-banner pokemon-table__batch-banner--loading" role="status">
+      <div class="pokemon-table__batch-spinner"></div>
+      <span class="pokemon-table__batch-banner-text">
+        Fetching additional Pokémon catalog in background ({{ batch()?.offset }} loaded)...
+      </span>
+    </div>
+  }
+
+  <!-- 4-State Container -->
+  <app-ui-state
+    [status]="status()"
+    [errorMessage]="errorMessage()"
+    emptyMessage="No Pokémon found matching your search and filter criteria."
+    skeletonHeight="520px"
+    [skeletonRows]="pagination().pageSize"
+    (retry)="onRetryClick()"
+  >
+    <div class="pokemon-table__container">
+      <div class="pokemon-table__scroll-pane">
+        <table class="pokemon-table__table">
+          <thead>
+            <tr class="pokemon-table__header-row">
+              <th
+                scope="col"
+                class="pokemon-table__th pokemon-table__th--id"
+                (click)="onHeaderClick('id')"
+              >
+                <div class="pokemon-table__th-content">
+                  <span>#</span>
+                  @if (sort().column === 'id') {
+                    <span class="pokemon-table__sort-indicator">{{ sort().direction === 'asc' ? '▲' : '▼' }}</span>
+                  }
+                </div>
+              </th>
+
+              <th
+                scope="col"
+                class="pokemon-table__th pokemon-table__th--name"
+                (click)="onHeaderClick('name')"
+              >
+                <div class="pokemon-table__th-content">
+                  <span>Name</span>
+                  @if (sort().column === 'name') {
+                    <span class="pokemon-table__sort-indicator">{{ sort().direction === 'asc' ? '▲' : '▼' }}</span>
+                  }
+                </div>
+              </th>
+
+              <th scope="col" class="pokemon-table__th pokemon-table__th--types">Types</th>
+
+              @for (col of statColumns; track col.id) {
+                <th
+                  scope="col"
+                  class="pokemon-table__th pokemon-table__th--stat"
+                  (click)="onHeaderClick(col.id)"
+                >
+                  <div class="pokemon-table__th-content">
+                    <span>{{ col.label }}</span>
+                    @if (sort().column === col.id) {
+                      <span class="pokemon-table__sort-indicator">{{ sort().direction === 'asc' ? '▲' : '▼' }}</span>
+                    }
+                  </div>
+                </th>
+              }
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (pokemon of pokemonList(); track pokemon.id) {
+              <tr
+                class="pokemon-table__row"
+                [class.pokemon-table__row--selected]="pokemon.id === selectedPokemonId()"
+                (click)="onRowClick(pokemon.id)"
+                tabindex="0"
+                (keydown.enter)="onRowClick(pokemon.id)"
+              >
+                <!-- Sprite & ID -->
+                <td class="pokemon-table__td pokemon-table__td--id">
+                  <div class="pokemon-table__identity">
+                    <img
+                      [src]="pokemon.spriteUrl"
+                      [alt]="pokemon.name"
+                      class="pokemon-table__sprite"
+                      loading="lazy"
+                      width="40"
+                      height="40"
+                    />
+                    <span class="pokemon-table__number">#{{ pokemon.id }}</span>
+                  </div>
+                </td>
+
+                <!-- Name -->
+                <td class="pokemon-table__td pokemon-table__td--name">
+                  <span class="pokemon-table__name-text">{{ pokemon.name | titlecase }}</span>
+                </td>
+
+                <!-- Types -->
+                <td class="pokemon-table__td pokemon-table__td--types">
+                  <div class="pokemon-table__type-badges">
+                    @for (t of pokemon.types; track t) {
+                      <app-badge [label]="t" size="small" />
+                    }
+                  </div>
+                </td>
+
+                <!-- 6 Stats + Total -->
+                <td class="pokemon-table__td pokemon-table__td--stat">{{ pokemon.stats.hp }}</td>
+                <td class="pokemon-table__td pokemon-table__td--stat">{{ pokemon.stats.attack }}</td>
+                <td class="pokemon-table__td pokemon-table__td--stat">{{ pokemon.stats.defense }}</td>
+                <td class="pokemon-table__td pokemon-table__td--stat">{{ pokemon.stats.specialAttack }}</td>
+                <td class="pokemon-table__td pokemon-table__td--stat">{{ pokemon.stats.specialDefense }}</td>
+                <td class="pokemon-table__td pokemon-table__td--stat">{{ pokemon.stats.speed }}</td>
+                <td class="pokemon-table__td pokemon-table__td--stat pokemon-table__td--total">
+                  <strong>{{ pokemon.totalStats }}</strong>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Footer -->
+      <div class="pokemon-table__pagination">
+        <div class="pokemon-table__pagination-info">
+          Showing <strong>{{ rangeStart() }}</strong> to <strong>{{ rangeEnd() }}</strong> of <strong>{{ totalCount() }}</strong> Pokémon
+        </div>
+
+        <div class="pokemon-table__pagination-controls">
+          <div class="pokemon-table__page-size">
+            <label for="table-page-size" class="pokemon-table__page-size-label">Rows per page:</label>
+            <select
+              id="table-page-size"
+              class="pokemon-table__page-size-select"
+              [value]="pagination().pageSize"
+              (change)="onPageSizeSelect($event)"
+            >
+              <option [value]="10">10</option>
+              <option [value]="25">25</option>
+              <option [value]="50">50</option>
+            </select>
+          </div>
+
+          <div class="pokemon-table__page-nav">
+            <button
+              type="button"
+              class="pokemon-table__nav-btn"
+              [disabled]="pagination().pageIndex === 0"
+              (click)="onPrevPage()"
+              aria-label="Previous Page"
+            >
+              &larr; Prev
+            </button>
+
+            <span class="pokemon-table__page-current">
+              Page {{ pagination().pageIndex + 1 }} of {{ totalPages() }}
+            </span>
+
+            <button
+              type="button"
+              class="pokemon-table__nav-btn"
+              [disabled]="pagination().pageIndex >= totalPages() - 1"
+              (click)="onNextPage()"
+              aria-label="Next Page"
+            >
+              Next &rarr;
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </app-ui-state>
+</div>
